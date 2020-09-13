@@ -38,7 +38,16 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            Image("example")
+                .interpolation(.none)
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .background(Color.black)
+                .edgesIgnoringSafeArea(.all)
+            
             Text("The value is => \(updater.value)")
+            
             Text("Hello, World!")
                 .onAppear {
                     self.fetchData(from: "https://www.apple.com") { (result) in
