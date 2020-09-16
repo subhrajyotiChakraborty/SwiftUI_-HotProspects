@@ -14,6 +14,7 @@
 		22ACD0B1250C10B700385B4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22ACD0B0250C10B700385B4C /* Assets.xcassets */; };
 		22ACD0B4250C10B700385B4C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 22ACD0B3250C10B700385B4C /* Preview Assets.xcassets */; };
 		22ACD0B7250C10B700385B4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 22ACD0B5250C10B700385B4C /* LaunchScreen.storyboard */; };
+		22BF5B802511FB0B00405EA1 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 22BF5B7F2511FB0B00405EA1 /* CodeScanner */; };
 		22E4AD2325106D6B003AE344 /* ProspectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E4AD2225106D6B003AE344 /* ProspectsView.swift */; };
 		22E4AD2525106D7B003AE344 /* MeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E4AD2425106D7B003AE344 /* MeView.swift */; };
 		22E4AD272510720A003AE344 /* Prospect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E4AD262510720A003AE344 /* Prospect.swift */; };
@@ -38,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22BF5B802511FB0B00405EA1 /* CodeScanner in Frameworks */,
 				22AB5CC9250F536B00B59460 /* SamplePackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,7 +50,6 @@
 		22ACD09E250C10B600385B4C = {
 			isa = PBXGroup;
 			children = (
-				22E4AD262510720A003AE344 /* Prospect.swift */,
 				22ACD0A9250C10B600385B4C /* HotProspects */,
 				22ACD0A8250C10B600385B4C /* Products */,
 			);
@@ -74,6 +75,7 @@
 				22ACD0B2250C10B700385B4C /* Preview Content */,
 				22E4AD2225106D6B003AE344 /* ProspectsView.swift */,
 				22E4AD2425106D7B003AE344 /* MeView.swift */,
+				22E4AD262510720A003AE344 /* Prospect.swift */,
 			);
 			path = HotProspects;
 			sourceTree = "<group>";
@@ -104,6 +106,7 @@
 			name = HotProspects;
 			packageProductDependencies = (
 				22AB5CC8250F536B00B59460 /* SamplePackage */,
+				22BF5B7F2511FB0B00405EA1 /* CodeScanner */,
 			);
 			productName = HotProspects;
 			productReference = 22ACD0A7250C10B600385B4C /* HotProspects.app */;
@@ -135,6 +138,7 @@
 			mainGroup = 22ACD09E250C10B600385B4C;
 			packageReferences = (
 				22AB5CC7250F536B00B59460 /* XCRemoteSwiftPackageReference "SamplePackage" */,
+				22BF5B7E2511FB0B00405EA1 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 			);
 			productRefGroup = 22ACD0A8250C10B600385B4C /* Products */;
 			projectDirPath = "";
@@ -370,6 +374,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		22BF5B7E2511FB0B00405EA1 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.6;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -377,6 +389,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 22AB5CC7250F536B00B59460 /* XCRemoteSwiftPackageReference "SamplePackage" */;
 			productName = SamplePackage;
+		};
+		22BF5B7F2511FB0B00405EA1 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22BF5B7E2511FB0B00405EA1 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
