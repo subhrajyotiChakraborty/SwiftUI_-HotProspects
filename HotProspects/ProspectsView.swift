@@ -11,6 +11,7 @@ import CodeScanner
 import UserNotifications
 
 struct ProspectsView: View {
+    let simulatedData = ["Paul Hudson\npaul@hackingwithswift.com", "Subha Chakraborty\nsubha@ss.com", "James Bower\njames@gmail.com"]
     let filter: FilterType
     var title: String {
         switch filter {
@@ -35,6 +36,7 @@ struct ProspectsView: View {
     
     @EnvironmentObject var prospects: Prospects
     @State private var isShowingScanner = false
+    @State private var isShowingSortOptions = false
     
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
@@ -46,6 +48,11 @@ struct ProspectsView: View {
                 let person = Prospect()
                 person.name = details[0]
                 person.emailAddress = details[1]
+                
+                let date = Date()
+                let currentTime = Int(date.timeIntervalSince1970)
+                person.createdAt = currentTime
+                
                 self.prospects.add(person)
             case .failure(let error):
                 print("Scanning failed")
@@ -88,15 +95,30 @@ struct ProspectsView: View {
         
     }
     
+    func sortListByName() {
+        self.prospects.sortByName(filterType: self.filter)
+    }
+    
+    func sortListByRecent() {
+        self.prospects.sortByRecent()
+    }
+    
     var body: some View {
         NavigationView {
             List {
                 ForEach(filteredProspects) { prospect in
-                    VStack(alignment: .leading) {
-                        Text(prospect.name)
-                            .font(.headline)
-                        Text(prospect.emailAddress)
-                            .foregroundColor(.secondary)
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(prospect.name)
+                                .font(.headline)
+                            Text(prospect.emailAddress)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        if (filter == .none) && (prospect.isContacted) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        }
                     }
                     .contextMenu {
                         Button(prospect.isContacted ? "Mark Uncontacted" : "Mark Contacted") {
@@ -111,16 +133,28 @@ struct ProspectsView: View {
                     }
                 }
             }
-            .sheet(isPresented: $isShowingScanner, content: {
-                CodeScannerView(codeTypes: [.qr], simulatedData: "Paul Hudson\npaul@hackingwithswift.com", completion: self.handleScan)
+            .actionSheet(isPresented: $isShowingSortOptions, content: {
+                ActionSheet(title: Text("Sort Options"), message: nil, buttons: [.default(Text("By Name"), action: {
+                    self.sortListByName()
+                }), .default(Text("By Recent"), action: {
+                    self.sortListByRecent()
+                }), .cancel()])
             })
-                .navigationBarTitle(title)
-                .navigationBarItems(trailing: Button(action: {
-                    self.isShowingScanner = true
-                }, label: {
-                    Image(systemName: "qrcode.viewfinder")
-                    Text("Scan")
-                }))
+            .sheet(isPresented: $isShowingScanner, content: {
+                CodeScannerView(codeTypes: [.qr], simulatedData: self.simulatedData.randomElement()!, completion: self.handleScan)
+            })
+            .navigationBarTitle(title)
+            .navigationBarItems(leading: Button(action: {
+                self.isShowingSortOptions = true
+            }, label: {
+                Image(systemName: "arrow.up.arrow.down.circle")
+                Text("Sort")
+            }), trailing: Button(action: {
+                self.isShowingScanner = true
+            }, label: {
+                Image(systemName: "qrcode.viewfinder")
+                Text("Scan")
+            }))
         }
     }
 }

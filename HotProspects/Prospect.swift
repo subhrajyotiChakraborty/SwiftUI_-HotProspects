@@ -10,8 +10,9 @@ import SwiftUI
 
 class Prospect: Identifiable, Codable {
     let id = UUID()
-    var name = "Anonymous"
+    var name = ""
     var emailAddress = ""
+    var createdAt = 0
     fileprivate(set) var isContacted = false
 }
 
@@ -20,13 +21,22 @@ class Prospects: ObservableObject {
     @Published private(set) var people: [Prospect]
     
     init() {
-        if let data =  UserDefaults.standard.data(forKey: Self.saveKey) {
-            if let decodeData = try? JSONDecoder().decode([Prospect].self, from: data) {
-                self.people = decodeData
-                return
-            }
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let fileName = paths[0].appendingPathComponent(Self.saveKey)
+        do {
+            let data = try Data(contentsOf: fileName)
+            let peopleData = try JSONDecoder().decode([Prospect].self, from: data)
+            self.people = peopleData
+            return
+        } catch  {
+            print("Unable to load data \(error.localizedDescription)")
         }
         self.people = []
+    }
+    
+    func getFilePath() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
     
     func toggle(_ prospect: Prospect) {
@@ -36,13 +46,41 @@ class Prospects: ObservableObject {
     }
     
     private func save() {
-        if let encoded = try? JSONEncoder().encode(people) {
-            UserDefaults.standard.set(encoded, forKey: Self.saveKey)
+        let fileName = getFilePath().appendingPathComponent(Self.saveKey)
+        do {
+            let data = try JSONEncoder().encode(people)
+            try data.write(to: fileName, options: [.atomicWrite, .completeFileProtection])
+        } catch {
+            print("Unable to write the data \(error.localizedDescription)")
         }
     }
     
     func add(_ prospect: Prospect) {
         people.append(prospect)
         save()
+    }
+    
+    func sortByName(filterType: FilterType) -> Void {
+        switch filterType {
+            case .none:
+                people = people.sorted { (lhs, rhs) -> Bool in
+                    lhs.name < rhs.name
+                }
+            case .contacted:
+                people = people.sorted { (lhs, rhs) -> Bool in
+                    lhs.name < rhs.name
+                }
+            case .uncontacted:
+                people = people.sorted { (lhs, rhs) -> Bool in
+                    lhs.name < rhs.name
+                }
+        }
+        
+    }
+    
+    func sortByRecent() {
+        people = people.sorted { (lhs, rhs) -> Bool in
+            lhs.createdAt > rhs.createdAt
+        }
     }
 }
