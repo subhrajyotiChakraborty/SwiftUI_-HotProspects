@@ -59,28 +59,4 @@ class Prospects: ObservableObject {
         people.append(prospect)
         save()
     }
-    
-    func sortByName(filterType: FilterType) -> Void {
-        switch filterType {
-            case .none:
-                people = people.sorted { (lhs, rhs) -> Bool in
-                    lhs.name < rhs.name
-                }
-            case .contacted:
-                people = people.sorted { (lhs, rhs) -> Bool in
-                    lhs.name < rhs.name
-                }
-            case .uncontacted:
-                people = people.sorted { (lhs, rhs) -> Bool in
-                    lhs.name < rhs.name
-                }
-        }
-        
-    }
-    
-    func sortByRecent() {
-        people = people.sorted { (lhs, rhs) -> Bool in
-            lhs.createdAt > rhs.createdAt
-        }
-    }
 }

@@ -11,7 +11,7 @@ import CodeScanner
 import UserNotifications
 
 struct ProspectsView: View {
-    let simulatedData = ["Paul Hudson\npaul@hackingwithswift.com", "Subha Chakraborty\nsubha@ss.com", "James Bower\njames@gmail.com"]
+    let simulatedData = ["Paul Hudson\npaul@hackingwithswift.com", "Subha Chakraborty\nsubha@ss.com", "James Bower\njames@jss.com"]
     let filter: FilterType
     var title: String {
         switch filter {
@@ -34,9 +34,22 @@ struct ProspectsView: View {
         }
     }
     
+    var sortedFilteredProspects: [Prospect] {
+            if isSortedByName {
+                return filteredProspects.sorted { (lhs, rhs) -> Bool in
+                    lhs.name < rhs.name
+                }
+            } else {
+                return filteredProspects.sorted { (lhs, rhs) -> Bool in
+                    lhs.createdAt > rhs.createdAt
+                }
+            }
+        }
+    
     @EnvironmentObject var prospects: Prospects
     @State private var isShowingScanner = false
     @State private var isShowingSortOptions = false
+    @State private var isSortedByName = true
     
     func handleScan(result: Result<String, CodeScannerView.ScanError>) {
         self.isShowingScanner = false
@@ -95,18 +108,10 @@ struct ProspectsView: View {
         
     }
     
-    func sortListByName() {
-        self.prospects.sortByName(filterType: self.filter)
-    }
-    
-    func sortListByRecent() {
-        self.prospects.sortByRecent()
-    }
-    
     var body: some View {
         NavigationView {
             List {
-                ForEach(filteredProspects) { prospect in
+                ForEach(sortedFilteredProspects) { prospect in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(prospect.name)
@@ -135,9 +140,9 @@ struct ProspectsView: View {
             }
             .actionSheet(isPresented: $isShowingSortOptions, content: {
                 ActionSheet(title: Text("Sort Options"), message: nil, buttons: [.default(Text("By Name"), action: {
-                    self.sortListByName()
+                    self.isSortedByName = true
                 }), .default(Text("By Recent"), action: {
-                    self.sortListByRecent()
+                    self.isSortedByName = false
                 }), .cancel()])
             })
             .sheet(isPresented: $isShowingScanner, content: {
